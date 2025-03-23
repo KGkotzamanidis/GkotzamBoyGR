@@ -1,0 +1,9 @@
+{
+    "makefile.launchConfigurations": [
+        {
+            "cwd": "/home/konstantinos/Documents/Visual Studio Code/GkotzamBoyGR",
+            "binaryPath": "/home/konstantinos/Documents/Visual Studio Code/GkotzamBoyGR/GkotzamBoyGR.o",
+            "binaryArgs": []
+        }
+    ]
+}
