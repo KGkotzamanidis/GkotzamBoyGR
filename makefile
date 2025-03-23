@@ -3,7 +3,7 @@ FLAGS=-fdiagnostics-color=always -g -Wall
 LINKER=-lSDL3 -lSDL3_image
 
 SOURCE=$(wildcard ./src/*.cpp)
-EXECname=GkotzamBoyGR
+EXECname=GkotzamBoyGR.o
 
 OUTPUT=-o $(EXECname)
 
