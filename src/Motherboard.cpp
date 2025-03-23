@@ -17,7 +17,7 @@
  */
 #include "Motherboard.h"
 
-Motherboard::Motherboard(Bios &bios, Cartridge &cartridge, PPU &ppu, WRAM &wram, Timers &timers, Interrupts &Interrupts) : bios(&bios), cartridge(&cartridge), ppu(&ppu), wram(&wram), timers(&timers), interrupts(&Interrupts)
+Motherboard::Motherboard(Bios &bios, Timers &timers, Interrupts &Interrupts) : bios(&bios), timers(&timers), interrupts(&Interrupts)
 {
     std::printf("Initiallize MOTHERBOARD Sector\n");
 }
@@ -35,28 +35,23 @@ uint8_t Motherboard::readByte(uint16_t address)
         }
         else
         {
-            data = cartridge->receivingData(address);
         }
     }
     /*8 KiB Video RAM (VRAM)*/
     else if (address >= 0x8000 && address <= 0x9FFF)
     {
-        data = ppu->receivingData(address);
     }
     /*8 KiB External RAM*/
     else if (address >= 0xA000 && address <= 0xBFFF)
     {
-        data = cartridge->receivingData(address);
     }
     /*4+4 KiB Work RAM with ECHO (WRAM)*/
     else if (address >= 0xC000 && address <= 0xFDFF)
     {
-        data = wram->receivingData(address);
     }
     /*Object attribute memory (OAM)*/
     else if (address >= 0xFE00 && address <= 0xFE9F)
     {
-        data = ppu->receivingData(address);
     }
     /*Not Usable*/
     else if (address >= 0xFEA0 && address <= 0xFEFF)
@@ -94,7 +89,6 @@ uint8_t Motherboard::readByte(uint16_t address)
         /*LCD Control, Status, Position, Scrolling, and Palettes*/
         else if (address >= 0xFF40 && address <= 0xFF4B)
         {
-            data = ppu->receivingData(address);
         }
         /*KEY1 CGB*/
         else if (address == 0xFF4D)
@@ -104,7 +98,6 @@ uint8_t Motherboard::readByte(uint16_t address)
         /*VRAM Bank Select*/
         else if (address == 0xFF4F)
         {
-            data = ppu->receivingData(address);
         }
         /*Set to non-zero to disable boot ROM*/
         else if (address == 0xFF50)
@@ -113,17 +106,14 @@ uint8_t Motherboard::readByte(uint16_t address)
         /*VRAM DMA*/
         else if (address >= 0xFF51 && address <= 0xFF55)
         {
-            data = ppu->receivingData(address);
         }
         /*BG / OBJ Palettes*/
         else if (address >= 0xFF68 && address <= 0xFF6B)
         {
-            data = ppu->receivingData(address);
         }
-        /*WRAM Bank Select*/
-        else if (address == 0xFF70 && cartridge->CGBmode)
+        /*WRAM Bank Select CGB*/
+        else if (address == 0xFF70 && true)
         {
-            data = wram->receivingData(address);
         }
     }
     /*High RAM (HRAM)*/
@@ -144,27 +134,22 @@ void Motherboard::writeByte(uint16_t address, uint8_t data)
     /* 16 KiB ROM bank 00-NN*/
     if (address >= 0x0000 && address <= 0x7FFF)
     {
-        cartridge->sendingData(address, data);
     }
     /*8 KiB Video RAM (VRAM)*/
     else if (address >= 0x8000 && address <= 0x9FFF)
     {
-        ppu->sendingData(address, data);
     }
     /*8 KiB External RAM*/
     else if (address >= 0xA000 && address <= 0xBFFF)
     {
-        cartridge->sendingData(address, data);
     }
     /*4+4 KiB Work RAM with ECHO (WRAM)*/
     else if (address >= 0xC000 && address <= 0xFDFF)
     {
-        wram->sendingData(address, data);
     }
     /*Object attribute memory (OAM)*/
     else if (address >= 0xFE00 && address <= 0xFE9F)
     {
-        ppu->sendingData(address, data);
     }
     /*Not Usable*/
     else if (address >= 0xFEA0 && address <= 0xFEFF)
@@ -202,16 +187,14 @@ void Motherboard::writeByte(uint16_t address, uint8_t data)
         /*LCD Control, Status, Position, Scrolling, and Palettes*/
         else if (address >= 0xFF40 && address <= 0xFF4B)
         {
-            ppu->sendingData(address, data);
         }
         else if (address == 0xFF4D)
         {
             KEY_1 = data;
         }
         /*VRAM Bank Select CGB*/
-        else if (address == 0xFF4F && cartridge->CGBmode)
+        else if (address == 0xFF4F && true)
         {
-            ppu->sendingData(address, data);
         }
         /*Set to non-zero to disable boot ROM*/
         else if (address == 0xFF50)
@@ -222,19 +205,16 @@ void Motherboard::writeByte(uint16_t address, uint8_t data)
             }
         }
         /*VRAM DMA CGB*/
-        else if ((address >= 0xFF51 && address <= 0xFF55) && cartridge->CGBmode)
+        else if ((address >= 0xFF51 && address <= 0xFF55) && true)
         {
-            ppu->sendingData(address, data);
         }
         /*BG / OBJ Palettes CGB*/
-        else if ((address >= 0xFF68 && address <= 0xFF6B) && cartridge->CGBmode)
+        else if ((address >= 0xFF68 && address <= 0xFF6B) && true)
         {
-            ppu->sendingData(address, data);
         }
         /*WRAM Bank Select CGB*/
-        else if (address == 0xFF70 && cartridge->CGBmode)
+        else if (address == 0xFF70 && true)
         {
-            wram->sendingData(address, data);
         }
     }
     /*High RAM (HRAM)*/

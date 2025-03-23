@@ -23,16 +23,13 @@
 #include <vector>
 
 #include "Bios.h"
-#include "Cartridge.h"
 #include "Interrupts.h"
-#include "PPU.h"
 #include "Timers.h"
-#include "WRAM.h"
 
 class Motherboard
 {
 public:
-    Motherboard(Bios &bios, Cartridge &cartridge, PPU &ppu, WRAM &wram, Timers &timers, Interrupts &Interrupts);
+    Motherboard(Bios &bios, Timers &timers, Interrupts &Interrupts);
 
     /*Read/Write 8Bit Signals*/
     uint8_t readByte(uint16_t address);
@@ -43,9 +40,6 @@ public:
 
 private:
     Bios *bios;
-    Cartridge *cartridge;
-    PPU *ppu;
-    WRAM *wram;
     Timers *timers;
     Interrupts *interrupts;
 
