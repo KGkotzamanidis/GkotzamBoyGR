@@ -16,534 +16,53 @@
  *along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 #include "SM83.h"
-SM83::SM83(Motherboard &mem) : mem(&mem)
-{
+SM83::SM83(Motherboard &mem) : mem(&mem) {
     std::printf("Initiallize CPU Sector\n");
     EIDIFlag = false;
     IME = false;
     IMEhold = false;
     ishalt = false;
 }
+// clang-format off
 const int SM83::instructionCount[] = {
-    4,
-    12,
-    8,
-    8,
-    4,
-    4,
-    8,
-    4,
-    20,
-    8,
-    8,
-    8,
-    4,
-    4,
-    8,
-    4,
-    4,
-    12,
-    8,
-    8,
-    4,
-    4,
-    8,
-    4,
-    12,
-    8,
-    8,
-    8,
-    4,
-    4,
-    8,
-    4,
-    8,
-    12,
-    8,
-    8,
-    4,
-    4,
-    8,
-    4,
-    8,
-    8,
-    8,
-    8,
-    4,
-    4,
-    8,
-    4,
-    8,
-    12,
-    8,
-    8,
-    12,
-    12,
-    12,
-    4,
-    8,
-    8,
-    8,
-    8,
-    4,
-    4,
-    8,
-    4,
-    4,
-    4,
-    4,
-    4,
-    4,
-    4,
-    8,
-    4,
-    4,
-    4,
-    4,
-    4,
-    4,
-    4,
-    8,
-    4,
-    4,
-    4,
-    4,
-    4,
-    4,
-    4,
-    8,
-    4,
-    4,
-    4,
-    4,
-    4,
-    4,
-    4,
-    8,
-    4,
-    4,
-    4,
-    4,
-    4,
-    4,
-    4,
-    8,
-    4,
-    4,
-    4,
-    4,
-    4,
-    4,
-    4,
-    8,
-    4,
-    8,
-    8,
-    8,
-    8,
-    8,
-    8,
-    4,
-    8,
-    4,
-    4,
-    4,
-    4,
-    4,
-    4,
-    8,
-    4,
-    4,
-    4,
-    4,
-    4,
-    4,
-    4,
-    8,
-    4,
-    4,
-    4,
-    4,
-    4,
-    4,
-    4,
-    8,
-    4,
-    4,
-    4,
-    4,
-    4,
-    4,
-    4,
-    8,
-    4,
-    4,
-    4,
-    4,
-    4,
-    4,
-    4,
-    8,
-    4,
-    4,
-    4,
-    4,
-    4,
-    4,
-    4,
-    8,
-    4,
-    4,
-    4,
-    4,
-    4,
-    4,
-    4,
-    8,
-    4,
-    4,
-    4,
-    4,
-    4,
-    4,
-    4,
-    8,
-    4,
-    4,
-    4,
-    4,
-    4,
-    4,
-    4,
-    8,
-    4,
-    8,
-    12,
-    12,
-    16,
-    12,
-    16,
-    8,
-    16,
-    8,
-    16,
-    12,
-    4,
-    12,
-    24,
-    8,
-    16,
-    8,
-    12,
-    12,
-    0,
-    12,
-    16,
-    8,
-    16,
-    8,
-    16,
-    12,
-    0,
-    12,
-    0,
-    8,
-    16,
-    12,
-    12,
-    8,
-    0,
-    0,
-    16,
-    8,
-    16,
-    16,
-    4,
-    16,
-    0,
-    0,
-    0,
-    8,
-    16,
-    12,
-    12,
-    8,
-    4,
-    0,
-    16,
-    8,
-    16,
-    12,
-    8,
-    16,
-    4,
-    0,
-    0,
-    8,
-    16,
+    4,12,8,8,4,4,8,4,20,8,8,8,4,4,8,4,
+    4,12,8,8,4,4,8,4,12,8,8,8,4,4,8,4,
+    8,12,8,8,4,4,8,4,8,8,8,8,4,4,8,4,
+    8,12,8,8,12,12,12,4,8,8,8,8,4,4,8,4,
+    4,4,4,4,4,4,8,4,4,4,4,4,4,4,8,4,
+    4,4,4,4,4,4,8,4,4,4,4,4,4,4,8,4,
+    4,4,4,4,4,4,8,4,4,4,4,4,4,4,8,4,
+    8,8,8,8,8,8,4,8,4,4,4,4,4,4,8,4,
+    4,4,4,4,4,4,8,4,4,4,4,4,4,4,8,4,
+    4,4,4,4,4,4,8,4,4,4,4,4,4,4,8,4,
+    4,4,4,4,4,4,8,4,4,4,4,4,4,4,8,4,
+    4,4,4,4,4,4,8,4,4,4,4,4,4,4,8,4,
+    8,12,12,16,12,16,8,16,8,16,12,4,12,24,8,16,
+    8,12,12,0,12,16,8,16,8,16,12,0,12,0,8,16,
+    12,12,8,0,0,16,8,16,16,4,16,0,0,0,8,16,
+    12,12,8,4,0,16,8,16,12,8,16,4,0,0,8,16,
 };
 
 const int SM83::prefixedinstructionCount[] = {
-    8,
-    8,
-    8,
-    8,
-    8,
-    8,
-    16,
-    8,
-    8,
-    8,
-    8,
-    8,
-    8,
-    8,
-    16,
-    8,
-    8,
-    8,
-    8,
-    8,
-    8,
-    8,
-    16,
-    8,
-    8,
-    8,
-    8,
-    8,
-    8,
-    8,
-    16,
-    8,
-    8,
-    8,
-    8,
-    8,
-    8,
-    8,
-    16,
-    8,
-    8,
-    8,
-    8,
-    8,
-    8,
-    8,
-    16,
-    8,
-    8,
-    8,
-    8,
-    8,
-    8,
-    8,
-    16,
-    8,
-    8,
-    8,
-    8,
-    8,
-    8,
-    8,
-    16,
-    8,
-    8,
-    8,
-    8,
-    8,
-    8,
-    8,
-    12,
-    8,
-    8,
-    8,
-    8,
-    8,
-    8,
-    8,
-    12,
-    8,
-    8,
-    8,
-    8,
-    8,
-    8,
-    8,
-    12,
-    8,
-    8,
-    8,
-    8,
-    8,
-    8,
-    8,
-    12,
-    8,
-    8,
-    8,
-    8,
-    8,
-    8,
-    8,
-    12,
-    8,
-    8,
-    8,
-    8,
-    8,
-    8,
-    8,
-    12,
-    8,
-    8,
-    8,
-    8,
-    8,
-    8,
-    8,
-    12,
-    8,
-    8,
-    8,
-    8,
-    8,
-    8,
-    8,
-    12,
-    8,
-    8,
-    8,
-    8,
-    8,
-    8,
-    8,
-    16,
-    8,
-    8,
-    8,
-    8,
-    8,
-    8,
-    8,
-    16,
-    8,
-    8,
-    8,
-    8,
-    8,
-    8,
-    8,
-    16,
-    8,
-    8,
-    8,
-    8,
-    8,
-    8,
-    8,
-    16,
-    8,
-    8,
-    8,
-    8,
-    8,
-    8,
-    8,
-    16,
-    8,
-    8,
-    8,
-    8,
-    8,
-    8,
-    8,
-    16,
-    8,
-    8,
-    8,
-    8,
-    8,
-    8,
-    8,
-    16,
-    8,
-    8,
-    8,
-    8,
-    8,
-    8,
-    8,
-    16,
-    8,
-    8,
-    8,
-    8,
-    8,
-    8,
-    8,
-    16,
-    8,
-    8,
-    8,
-    8,
-    8,
-    8,
-    8,
-    16,
-    8,
-    8,
-    8,
-    8,
-    8,
-    8,
-    8,
-    16,
-    8,
-    8,
-    8,
-    8,
-    8,
-    8,
-    8,
-    16,
-    8,
-    8,
-    8,
-    8,
-    8,
-    8,
-    8,
-    16,
-    8,
-    8,
-    8,
-    8,
-    8,
-    8,
-    8,
-    16,
-    8,
-    8,
-    8,
-    8,
-    8,
-    8,
-    8,
-    16,
-    8,
-    8,
-    8,
-    8,
-    8,
-    8,
-    8,
-    16,
-    8,
+    8,8,8,8,8,8,16,8,8,8,8,8,8,8,16,8,
+    8,8,8,8,8,8,16,8,8,8,8,8,8,8,16,8,
+    8,8,8,8,8,8,16,8,8,8,8,8,8,8,16,8,
+    8,8,8,8,8,8,16,8,8,8,8,8,8,8,16,8,
+    8,8,8,8,8,8,12,8,8,8,8,8,8,8,12,8,
+    8,8,8,8,8,8,12,8,8,8,8,8,8,8,12,8,
+    8,8,8,8,8,8,12,8,8,8,8,8,8,8,12,8,
+    8,8,8,8,8,8,12,8,8,8,8,8,8,8,12,8,
+    8,8,8,8,8,8,16,8,8,8,8,8,8,8,16,8,
+    8,8,8,8,8,8,16,8,8,8,8,8,8,8,16,8,
+    8,8,8,8,8,8,16,8,8,8,8,8,8,8,16,8,
+    8,8,8,8,8,8,16,8,8,8,8,8,8,8,16,8,
+    8,8,8,8,8,8,16,8,8,8,8,8,8,8,16,8,
+    8,8,8,8,8,8,16,8,8,8,8,8,8,8,16,8,
+    8,8,8,8,8,8,16,8,8,8,8,8,8,8,16,8,
+    8,8,8,8,8,8,16,8,8,8,8,8,8,8,16,8,
 };
-
-void SM83::reset(void)
-{
+// clang-format on
+void SM83::reset(void) {
     EIDIFlag = false;
     IME = false;
     IMEhold = false;
@@ -554,8 +73,7 @@ void SM83::reset(void)
     A = B = C = D = E = H = L = F = 0x00;
 }
 
-void SM83::step(void)
-{
+void SM83::step(void) {
     IME = EIDIFlag ? IME : IMEhold;
     EIDIFlag = false;
 
@@ -563,68 +81,52 @@ void SM83::step(void)
     uint8_t ieflags = mem->readByte(IEaddress);
     uint8_t activeInterrupts = iflags & ieflags;
 
-    if (activeInterrupts != 0)
-    {
+    if (activeInterrupts != 0) {
         ishalt = false;
 
-        if (IME)
-        {
+        if (IME) {
             IMEhold = false;
             IME = false;
 
-            if (activeInterrupts & VBlankInterrupt)
-            {
+            if (activeInterrupts & VBlankInterrupt) {
                 mem->writeByte(IFaddress, iflags & ~VBlankInterrupt);
                 rst(0x40);
-            }
-            else if (activeInterrupts & LCDCInterrupt)
-            {
+            } else if (activeInterrupts & LCDCInterrupt) {
                 mem->writeByte(IFaddress, iflags & ~LCDCInterrupt);
                 rst(0x48);
-            }
-            else if (activeInterrupts & timerOverflow)
-            {
+            } else if (activeInterrupts & timerOverflow) {
                 mem->writeByte(IFaddress, iflags & ~timerOverflow);
                 rst(0x50);
-            }
-            else if (activeInterrupts & buttonOverflow)
-            {
+            } else if (activeInterrupts & buttonOverflow) {
                 mem->writeByte(IFaddress, iflags & ~buttonOverflow);
                 rst(0x60);
             }
         }
     }
 
-    if (!ishalt)
-    {
+    if (!ishalt) {
         executeInstruction(mem->readByte(PC));
-    }
-    else
-    {
+    } else {
         lastCycleCount = 4;
     }
 }
 
-bool SM83::getDoubleSpeed()
-{
+bool SM83::getDoubleSpeed() {
     return DoubleSpeed;
 }
 
-int SM83::getlastCycleCount()
-{
+int SM83::getlastCycleCount() {
     return lastCycleCount;
 }
 
 /* For more information about the SM83 Instruction read this
    https://gbdev.io/gb-opcodes/optables/
 */
-void SM83::executeInstruction(uint8_t opcode)
-{
+void SM83::executeInstruction(uint8_t opcode) {
     PC++;
     lastCycleCount = instructionCount[opcode];
 
-    switch (opcode)
-    {
+    switch (opcode) {
     case 0x00:
         nop();
         break;
@@ -648,8 +150,7 @@ void SM83::executeInstruction(uint8_t opcode)
         B = mem->readByte(PC);
         PC++;
         break;
-    case 0x07:
-    {
+    case 0x07: {
         /*
          *A = RLC(A);
          */
@@ -684,8 +185,7 @@ void SM83::executeInstruction(uint8_t opcode)
         C = mem->readByte(PC);
         PC++;
         break;
-    case 0x0F:
-    {
+    case 0x0F: {
         /*
          *A = RRC(A);
          */
@@ -721,8 +221,7 @@ void SM83::executeInstruction(uint8_t opcode)
         D = mem->readByte(PC);
         PC++;
         break;
-    case 0x17:
-    {
+    case 0x17: {
         /*
          *A = RL(A);
          */
@@ -757,8 +256,7 @@ void SM83::executeInstruction(uint8_t opcode)
         E = mem->readByte(PC);
         PC++;
         break;
-    case 0x1F:
-    {
+    case 0x1F: {
         /*
          * A = RR(A);
          */
@@ -1456,8 +954,7 @@ void SM83::executeInstruction(uint8_t opcode)
     case 0xF7:
         rst(0x30);
         break;
-    case 0xF8:
-    {
+    case 0xF8: {
         int8_t data = mem->readByte(PC);
         uint16_t result = SP + data;
         setFlag(Flag_Z, false);
@@ -1496,12 +993,10 @@ void SM83::executeInstruction(uint8_t opcode)
     }
 }
 
-void SM83::executePrefixedInstruction(uint8_t opcode)
-{
+void SM83::executePrefixedInstruction(uint8_t opcode) {
     PC++;
     lastCycleCount = prefixedinstructionCount[opcode];
-    switch (opcode)
-    {
+    switch (opcode) {
     case 0x0:
         B = RLC(B);
         break;
@@ -2275,79 +1770,63 @@ void SM83::executePrefixedInstruction(uint8_t opcode)
     }
 }
 
-uint16_t SM83::AF()
-{
+uint16_t SM83::AF() {
     return (A << 8) | (F & 0xF0);
 }
 
-uint16_t SM83::BC()
-{
+uint16_t SM83::BC() {
     return (B << 8) | C;
 }
 
-uint16_t SM83::DE()
-{
+uint16_t SM83::DE() {
     return (D << 8) | E;
 }
 
-uint16_t SM83::HL()
-{
+uint16_t SM83::HL() {
     return (H << 8) | L;
 }
 
-void SM83::setAF(uint16_t data)
-{
+void SM83::setAF(uint16_t data) {
     A = (data >> 8) & 0xFF;
     F = data & 0xF0;
 }
 
-void SM83::setBC(uint16_t data)
-{
+void SM83::setBC(uint16_t data) {
     B = (data >> 8) & 0xFF;
     C = data & 0xFF;
 }
 
-void SM83::setDE(uint16_t data)
-{
+void SM83::setDE(uint16_t data) {
     D = (data >> 8) & 0xFF;
     E = data & 0xFF;
 }
 
-void SM83::setHL(uint16_t data)
-{
+void SM83::setHL(uint16_t data) {
     H = (data >> 8) & 0xFF;
     L = data & 0xFF;
 }
 
-void SM83::setFlag(uint8_t flag, bool state)
-{
-    if (state)
-    {
+void SM83::setFlag(uint8_t flag, bool state) {
+    if (state) {
         F |= (1 << flag);
-    }
-    else
-    {
+    } else {
         F &= ~(1 << flag);
     }
 }
 
-bool SM83::getFlag(uint8_t flag)
-{
+bool SM83::getFlag(uint8_t flag) {
     return (F & (1 << flag)) != 0;
 }
 
-bool SM83::getFlagZ()
-{
+bool SM83::getFlagZ() {
     return (F & Flag_Z) != 0;
 }
 
-bool SM83::getFlagC()
-{
+bool SM83::getFlagC() {
     return (F & Flag_C) != 0;
 }
 
-void SM83::alu16bitADD(uint16_t data)
-{
+void SM83::alu16bitADD(uint16_t data) {
     uint16_t hl = HL();
     uint32_t result = hl + data;
     setHL(result & 0xFFFF);
@@ -2356,8 +1835,7 @@ void SM83::alu16bitADD(uint16_t data)
     setFlag(Flag_C, result > 0xFFFF);
 }
 
-void SM83::alu16bitSPADD()
-{
+void SM83::alu16bitSPADD() {
     int8_t data = (int8_t)mem->readByte(PC++);
     uint16_t tmp = SP;
     uint16_t result = SP + data;
@@ -2368,8 +1846,7 @@ void SM83::alu16bitSPADD()
     SP = result;
 }
 
-void SM83::alu8bitADD(uint8_t data)
-{
+void SM83::alu8bitADD(uint8_t data) {
     uint8_t tmp = A;
     A += data;
     setFlag(Flag_Z, (A == 0));
@@ -2378,8 +1855,7 @@ void SM83::alu8bitADD(uint8_t data)
     setFlag(Flag_C, (tmp + data > 0xFF));
 }
 
-void SM83::alu8bitADC(uint8_t data, bool carry)
-{
+void SM83::alu8bitADC(uint8_t data, bool carry) {
     uint8_t tmp = A;
     uint8_t carryValue = carry ? 1 : 0;
     A += data + carryValue;
@@ -2389,8 +1865,7 @@ void SM83::alu8bitADC(uint8_t data, bool carry)
     setFlag(Flag_C, (tmp + data + carryValue) > 0xFF);
 }
 
-void SM83::alu8bitSUB(uint8_t data)
-{
+void SM83::alu8bitSUB(uint8_t data) {
     uint8_t tmp = A;
     A -= data;
     setFlag(Flag_Z, (A == 0));
@@ -2399,8 +1874,7 @@ void SM83::alu8bitSUB(uint8_t data)
     setFlag(Flag_C, (A > tmp));
 }
 
-void SM83::alu8bitSBC(uint8_t data, bool carry)
-{
+void SM83::alu8bitSBC(uint8_t data, bool carry) {
     uint8_t tmp = A;
     uint8_t carryValue = carry ? 1 : 0;
     A -= (data + carryValue);
@@ -2410,8 +1884,7 @@ void SM83::alu8bitSBC(uint8_t data, bool carry)
     setFlag(Flag_C, (tmp < (data + carryValue)));
 }
 
-uint8_t SM83::alu8bitINC(uint8_t data)
-{
+uint8_t SM83::alu8bitINC(uint8_t data) {
     uint8_t tmp = data;
     data++;
     setFlag(Flag_Z, (data == 0));
@@ -2420,8 +1893,7 @@ uint8_t SM83::alu8bitINC(uint8_t data)
     return data;
 }
 
-uint8_t SM83::alu8bitDEC(uint8_t data)
-{
+uint8_t SM83::alu8bitDEC(uint8_t data) {
     uint8_t tmp = data;
     data--;
     setFlag(Flag_Z, (data == 0));
@@ -2430,8 +1902,7 @@ uint8_t SM83::alu8bitDEC(uint8_t data)
     return data;
 }
 
-void SM83::logic8bitAND(uint8_t data)
-{
+void SM83::logic8bitAND(uint8_t data) {
     A &= data;
     setFlag(Flag_Z, (A == 0));
     setFlag(Flag_N, false);
@@ -2439,8 +1910,7 @@ void SM83::logic8bitAND(uint8_t data)
     setFlag(Flag_C, false);
 }
 
-void SM83::logic8bitOR(uint8_t data)
-{
+void SM83::logic8bitOR(uint8_t data) {
     A |= data;
     setFlag(Flag_Z, (A == 0));
     setFlag(Flag_N, false);
@@ -2448,8 +1918,7 @@ void SM83::logic8bitOR(uint8_t data)
     setFlag(Flag_C, false);
 }
 
-void SM83::logic8bitXOR(uint8_t data)
-{
+void SM83::logic8bitXOR(uint8_t data) {
     A ^= data;
     setFlag(Flag_Z, (A == 0));
     setFlag(Flag_N, false);
@@ -2457,8 +1926,7 @@ void SM83::logic8bitXOR(uint8_t data)
     setFlag(Flag_C, false);
 }
 
-void SM83::logic8bitCP(uint8_t data)
-{
+void SM83::logic8bitCP(uint8_t data) {
     uint8_t result = A - data;
     setFlag(Flag_Z, (result == 0));
     setFlag(Flag_N, true);
@@ -2466,25 +1934,19 @@ void SM83::logic8bitCP(uint8_t data)
     setFlag(Flag_C, (A < data));
 }
 
-void SM83::logic8bitDAA()
-{
+void SM83::logic8bitDAA() {
     uint8_t correction = 0;
     bool carry = false;
-    if (getFlag(Flag_H) || (!getFlag(Flag_N) && (A & 0x0F) > 9))
-    {
+    if (getFlag(Flag_H) || (!getFlag(Flag_N) && (A & 0x0F) > 9)) {
         correction |= 0x06;
     }
-    if (getFlag(Flag_C) || (!getFlag(Flag_N) && A > 0x99))
-    {
+    if (getFlag(Flag_C) || (!getFlag(Flag_N) && A > 0x99)) {
         correction |= 0x60;
         carry = true;
     }
-    if (getFlag(Flag_N))
-    {
+    if (getFlag(Flag_N)) {
         A -= correction;
-    }
-    else
-    {
+    } else {
         A += correction;
     }
     setFlag(Flag_Z, (A == 0));
@@ -2492,15 +1954,13 @@ void SM83::logic8bitDAA()
     setFlag(Flag_C, carry);
 }
 
-void SM83::logic8bitCPL()
-{
+void SM83::logic8bitCPL() {
     A = ~A;
     setFlag(Flag_N, true);
     setFlag(Flag_H, true);
 }
 
-uint8_t SM83::RLC(uint8_t data)
-{
+uint8_t SM83::RLC(uint8_t data) {
     uint8_t result = data;
     bool carry = (result & 0x80) != 0;
     result = (result << 1) | (uint8_t)carry;
@@ -2511,8 +1971,7 @@ uint8_t SM83::RLC(uint8_t data)
     return result;
 }
 
-uint8_t SM83::RL(uint8_t data)
-{
+uint8_t SM83::RL(uint8_t data) {
     uint8_t result = data;
     bool carryFlagBit = getFlagC();
     bool carry = (result & 0x80) != 0;
@@ -2524,8 +1983,7 @@ uint8_t SM83::RL(uint8_t data)
     return result;
 }
 
-uint8_t SM83::RRC(uint8_t data)
-{
+uint8_t SM83::RRC(uint8_t data) {
     uint8_t result = data;
     bool carry = (result & 0x1) != 0;
     result = (result >> 1) | (carry << 7);
@@ -2536,8 +1994,7 @@ uint8_t SM83::RRC(uint8_t data)
     return result;
 }
 
-uint8_t SM83::RR(uint8_t data)
-{
+uint8_t SM83::RR(uint8_t data) {
     uint8_t result = data;
     bool carryFlagBit = getFlagC();
     bool carry = (result & 0x01) != 0;
@@ -2549,8 +2006,7 @@ uint8_t SM83::RR(uint8_t data)
     return result;
 }
 
-uint8_t SM83::SLA(uint8_t data)
-{
+uint8_t SM83::SLA(uint8_t data) {
     uint8_t result = data;
     bool carry = (result & 0x80) != 0;
     result = result << 1;
@@ -2561,8 +2017,7 @@ uint8_t SM83::SLA(uint8_t data)
     return result;
 }
 
-uint8_t SM83::SRA(uint8_t data)
-{
+uint8_t SM83::SRA(uint8_t data) {
     int8_t result = (int8_t)data;
     bool carry = (result & 0x01) != 0;
     result = result >> 1;
@@ -2573,8 +2028,7 @@ uint8_t SM83::SRA(uint8_t data)
     return (uint8_t)result;
 }
 
-uint8_t SM83::SRL(uint8_t data)
-{
+uint8_t SM83::SRL(uint8_t data) {
     uint8_t result = data;
     bool carry = (result & 0x01) != 0;
     result = result >> 1;
@@ -2585,8 +2039,7 @@ uint8_t SM83::SRL(uint8_t data)
     return (uint8_t)result;
 }
 
-uint8_t SM83::SWAP(uint8_t data)
-{
+uint8_t SM83::SWAP(uint8_t data) {
     uint8_t result = (data & 0xF0) >> 4;
     result |= data << 4;
     setFlag(Flag_Z, (result == 0));
@@ -2596,75 +2049,58 @@ uint8_t SM83::SWAP(uint8_t data)
     return result;
 }
 
-void SM83::BIT(int bit, uint8_t data)
-{
+void SM83::BIT(int bit, uint8_t data) {
     bool result = (data & (1 << bit)) == 0;
     setFlag(Flag_Z, result);
     setFlag(Flag_N, false);
     setFlag(Flag_H, true);
 }
 
-uint8_t SM83::SET(int bit, uint8_t data)
-{
+uint8_t SM83::SET(int bit, uint8_t data) {
     uint8_t setBit = 1 << bit;
     uint8_t result = data | setBit;
     return result;
 }
 
-uint8_t SM83::RES(int bit, uint8_t data)
-{
+uint8_t SM83::RES(int bit, uint8_t data) {
     uint8_t resetBit = ~(1 << bit);
     uint8_t result = data & resetBit;
     return result;
 }
 
-void SM83::jp(bool state)
-{
-    if (state)
-    {
+void SM83::jp(bool state) {
+    if (state) {
         lastCycleCount = 16;
         PC = mem->readWord(PC);
-    }
-    else
-    {
+    } else {
         PC += 2;
     }
 }
 
-void SM83::jr(bool state)
-{
-    if (state)
-    {
+void SM83::jr(bool state) {
+    if (state) {
         lastCycleCount = 12;
         int8_t offset = (int8_t)mem->readByte(PC++);
         PC += offset;
-    }
-    else
-    {
+    } else {
         PC++;
     }
 }
 
-void SM83::call(bool state)
-{
-    if (state)
-    {
+void SM83::call(bool state) {
+    if (state) {
         uint16_t returnAddress = PC + 2;
         SP -= 2;
         mem->writeWord(SP, returnAddress);
         PC = mem->readWord(PC);
         lastCycleCount = 24;
-    }
-    else
-    {
+    } else {
         PC += 2;
     }
 }
 
-void SM83::ret(bool state)
-{
-    if (state)
-    {
+void SM83::ret(bool state) {
+    if (state) {
         lastCycleCount = 20;
         uint16_t address = mem->readWord(SP);
         SP += 2;
@@ -2672,69 +2108,58 @@ void SM83::ret(bool state)
     }
 }
 
-void SM83::reti(void)
-{
+void SM83::reti(void) {
     ret(true);
     IME = true;
     IMEhold = true;
     lastCycleCount = 16;
 }
 
-void SM83::rst(uint8_t data)
-{
+void SM83::rst(uint8_t data) {
     SP -= 2;
     mem->writeWord(SP, PC);
     PC = data;
 }
 
-void SM83::ccf(void)
-{
+void SM83::ccf(void) {
     setFlag(Flag_C, !getFlagC());
     setFlag(Flag_N, false);
     setFlag(Flag_H, false);
 }
 
-void SM83::scf(void)
-{
+void SM83::scf(void) {
     setFlag(Flag_N, false);
     setFlag(Flag_H, false);
     setFlag(Flag_C, true);
 }
 
-void SM83::nop(void)
-{
+void SM83::nop(void) {
 }
 
-void SM83::halt(void)
-{
+void SM83::halt(void) {
     ishalt = true;
-    if (!IME && ((mem->readByte(IFaddress) & mem->readByte(IEaddress)) != 0))
-    {
+    if (!IME && ((mem->readByte(IFaddress) & mem->readByte(IEaddress)) != 0)) {
         ishalt = false;
         PC--;
     }
 }
 
-void SM83::stop(void)
-{
+void SM83::stop(void) {
     uint8_t key1 = mem->readByte(0xFF4D);
 
-    if ((key1 & 0x1) == 0x1)
-    {
+    if ((key1 & 0x1) == 0x1) {
         DoubleSpeed = !DoubleSpeed;
     }
 
     mem->writeByte(0xFF4D, (key1 & 0x7E) | ((DoubleSpeed ? 1 : 0) << 7));
 }
 
-void SM83::di(void)
-{
+void SM83::di(void) {
     IMEhold = false;
     EIDIFlag = true;
 }
 
-void SM83::ei(void)
-{
+void SM83::ei(void) {
     IMEhold = true;
     EIDIFlag = true;
 }

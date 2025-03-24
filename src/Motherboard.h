@@ -26,8 +26,7 @@
 #include "Interrupts.h"
 #include "Timers.h"
 
-class Motherboard
-{
+class Motherboard {
 public:
     Motherboard(Bios &bios, Timers &timers, Interrupts &Interrupts);
 
@@ -40,8 +39,8 @@ public:
 
 private:
     Bios *bios = nullptr;
-    Timers *timers= nullptr;
-    Interrupts *interrupts= nullptr;
+    Timers *timers = nullptr;
+    Interrupts *interrupts = nullptr;
 
     std::vector<uint8_t> HRAM = std::vector<uint8_t>(0x7E, 0);
 

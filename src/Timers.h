@@ -18,14 +18,13 @@
 #ifndef TIMERS_H
 #define TIMERS_H
 
-#include <iostream>
 #include <cstdint>
+#include <iostream>
 
 #include "EmulationUtils.h"
 #include "Interrupts.h"
 
-class Timers
-{
+class Timers {
 public:
     Timers(Interrupts &interrupts);
 
@@ -36,7 +35,7 @@ public:
     void updateTimers(int lastCycleCount);
 
 private:
-    Interrupts *interrupts= nullptr;
+    Interrupts *interrupts = nullptr;
 
     uint8_t DIV = 0x00, TIMA = 0x00, TMA = 0x00, TAC = 0x00;
 

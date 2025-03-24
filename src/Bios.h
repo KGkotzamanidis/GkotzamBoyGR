@@ -22,8 +22,7 @@
 #include <fstream>
 #include <vector>
 
-class Bios
-{
+class Bios {
 public:
     Bios();
 

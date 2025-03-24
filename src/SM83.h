@@ -20,8 +20,7 @@
 #include "EmulationUtils.h"
 #include "Motherboard.h"
 
-class SM83
-{
+class SM83 {
 public:
     SM83(Motherboard &mem);
 
@@ -32,7 +31,7 @@ public:
     int getlastCycleCount();
 
 private: /* CPU Functions */
-    Motherboard *mem= nullptr;
+    Motherboard *mem = nullptr;
 
     int lastCycleCount;
 

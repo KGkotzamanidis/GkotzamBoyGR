@@ -1,6 +1,6 @@
 /*
  *An Gameboy and GameboyColor emulation with project name GkotzamBoyGR
- *Copyright (C) <Fri Mar 21 2025>  <KGkotzamanidis>
+ *Copyright (C) <Mon Mar 24 2025>  <KGkotzamanidis>
  *
  *This program is free software: you can redistribute it and/or modify
  *it under the terms of the GNU General Public License as published by
@@ -15,18 +15,9 @@
  *You should have received a copy of the GNU General Public License
  *along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef INTERRUPTS_H
-#define INTERRUPTS_H
-
-#include <cstdint>
-#include <iostream>
-
-class Interrupts {
-public:
-    Interrupts() {
-        std::printf("Initiallize INTERRUPTS Sector\n");
-    }
-    uint8_t IF = 0x00;
-    uint8_t IE = 0x00;
+#ifndef PPU_H
+#define PPU_H
+class PPU {
+private:
 };
 #endif
