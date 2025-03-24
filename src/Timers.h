@@ -32,10 +32,12 @@ public:
     uint8_t receivingData(uint16_t address);
     void sendingData(uint16_t address, uint8_t data);
 
+    void reset(void);
     void updateTimers(int lastCycleCount);
 
 private:
-    Interrupts *interrupts;
+    Interrupts *interrupts= nullptr;
+
     uint8_t DIV = 0x00, TIMA = 0x00, TMA = 0x00, TAC = 0x00;
 
     int DIVCycleCount = 0, TIMACycleCount = 0;

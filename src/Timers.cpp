@@ -64,6 +64,11 @@ void Timers::sendingData(uint16_t address, uint8_t data)
     }
 }
 
+void Timers::reset(void)
+{
+    DIV = TIMA = TMA = TAC = 0x00;
+}
+
 void Timers::updateTimers(int lastCycleCount)
 {
     DIVCycleCount += lastCycleCount;
