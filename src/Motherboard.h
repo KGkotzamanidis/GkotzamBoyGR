@@ -39,9 +39,9 @@ public:
     void writeWord(uint16_t address, uint16_t data);
 
 private:
-    Bios *bios;
-    Timers *timers;
-    Interrupts *interrupts;
+    Bios *bios = nullptr;
+    Timers *timers= nullptr;
+    Interrupts *interrupts= nullptr;
 
     std::vector<uint8_t> HRAM = std::vector<uint8_t>(0x7E, 0);
 

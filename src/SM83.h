@@ -32,7 +32,7 @@ public:
     int getlastCycleCount();
 
 private: /* CPU Functions */
-    Motherboard *mem;
+    Motherboard *mem= nullptr;
 
     int lastCycleCount;
 
