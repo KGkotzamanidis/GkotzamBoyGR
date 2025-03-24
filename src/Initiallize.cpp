@@ -23,11 +23,38 @@
 #include "Interrupts.h"
 #include "SM83.h"
 #include "Timers.h"
+
+std::vector<uint32_t> framebuffer;
+
+void drawEmoji()
+{
+    for (int y = 30; y < 110; y++)
+    {
+        for (int x = 40; x < 120; x++)
+        {
+            int index = y * 160 + x;
+
+            // Face color (yellow)
+            framebuffer[index] = 0xFFFF00FF;
+
+            // Eyes (black)
+            if ((x > 60 && x < 70 && y > 50 && y < 60) || (x > 90 && x < 100 && y > 50 && y < 60))
+            {
+                framebuffer[index] = 0x000000FF;
+            }
+
+            // Smile (black curve)
+            if (y > 80 && y < 90 && (x > 55 && x < 105))
+            {
+                framebuffer[index] = 0x000000FF;
+            }
+        }
+    }
+}
+
 int main(int argc, char *argv[])
 {
     Bios bios;
-    bios.loadBios("./resource/bios.bin");
-
     Interrupts interrupts;
     Timers timers(interrupts);
     Motherboard board(bios, timers, interrupts);
@@ -53,8 +80,12 @@ int main(int argc, char *argv[])
     bool done = false;
     bool emulating = false;
 
+    framebuffer.resize(160 * 144, 0x000000FF);
+
+    bios.loadBios("./resource/bios.bin");
+    timers.reset();
     cpu.reset();
-    
+
     while (!done)
     {
         while (SDL_PollEvent(&event))
@@ -68,6 +99,22 @@ int main(int argc, char *argv[])
                 emulating = true;
             }
         }
+
+        drawEmoji();
+
+        SDL_Surface *surface = SDL_CreateSurfaceFrom(
+            160, 144,
+            SDL_PIXELFORMAT_RGBA32,
+            framebuffer.data(),
+            160 * sizeof(uint32_t));
+
+        SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
+        SDL_DestroySurface(surface);
+
+        SDL_RenderClear(renderer);
+        SDL_RenderTexture(renderer, texture, NULL, NULL);
+        SDL_RenderPresent(renderer);
+        SDL_DestroyTexture(texture);
     }
 
     SDL_DestroyWindow(windows);
