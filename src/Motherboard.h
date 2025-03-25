@@ -28,7 +28,7 @@
 
 class Motherboard {
 public:
-    Motherboard(Bios &bios, Timers &timers, Interrupts &Interrupts);
+    Motherboard(Bios &bios, Timers &timers, Interrupts &Interrupts, bool CGBmode);
 
     /*Read/Write 8Bit Signals*/
     uint8_t readByte(uint16_t address);
@@ -44,7 +44,8 @@ private:
 
     std::vector<uint8_t> HRAM = std::vector<uint8_t>(0x7E, 0);
 
-private:
+private: /*CGB Mode*/
     uint8_t KEY_1 = 0, WRAMBank = 1;
+    bool CGBmode = false;
 };
 #endif

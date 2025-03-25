@@ -51,7 +51,7 @@ int main(int argc, char *argv[]) {
     Bios bios;
     Interrupts interrupts;
     Timers timers(interrupts);
-    Motherboard board(bios, timers, interrupts);
+    Motherboard board(bios, timers, interrupts, false);
     SM83 cpu(board);
 
     SDL_Init(SDL_INIT_VIDEO);

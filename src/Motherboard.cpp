@@ -17,8 +17,9 @@
  */
 #include "Motherboard.h"
 
-Motherboard::Motherboard(Bios &bios, Timers &timers, Interrupts &Interrupts) : bios(&bios), timers(&timers), interrupts(&Interrupts) {
+Motherboard::Motherboard(Bios &bios, Timers &timers, Interrupts &Interrupts, bool CGBmode) : bios(&bios), timers(&timers), interrupts(&Interrupts), CGBmode(CGBmode) {
     std::printf("Initiallize MOTHERBOARD Sector\n");
+    this->CGBmode = CGBmode;
 }
 
 /*Read/Write 8Bit Signals*/
@@ -75,20 +76,20 @@ uint8_t Motherboard::readByte(uint16_t address) {
         else if (address == 0xFF4D) {
             data = KEY_1;
         }
-        /*VRAM Bank Select*/
-        else if (address == 0xFF4F) {
+        /*VRAM Bank Select CGB*/
+        else if (address == 0xFF4F && CGBmode) {
         }
         /*Set to non-zero to disable boot ROM*/
         else if (address == 0xFF50) {
         }
         /*VRAM DMA*/
-        else if (address >= 0xFF51 && address <= 0xFF55) {
+        else if ((address >= 0xFF51 && address <= 0xFF55) && CGBmode) {
         }
-        /*BG / OBJ Palettes*/
-        else if (address >= 0xFF68 && address <= 0xFF6B) {
+        /*BG / OBJ Palettes CGB*/
+        else if ((address >= 0xFF68 && address <= 0xFF6B) && CGBmode) {
         }
         /*WRAM Bank Select CGB*/
-        else if (address == 0xFF70 && true) {
+        else if (address == 0xFF70 && CGBmode) {
         }
     }
     /*High RAM (HRAM)*/
@@ -149,7 +150,7 @@ void Motherboard::writeByte(uint16_t address, uint8_t data) {
             KEY_1 = data;
         }
         /*VRAM Bank Select CGB*/
-        else if (address == 0xFF4F && true) {
+        else if (address == 0xFF4F && CGBmode) {
         }
         /*Set to non-zero to disable boot ROM*/
         else if (address == 0xFF50) {
@@ -158,13 +159,13 @@ void Motherboard::writeByte(uint16_t address, uint8_t data) {
             }
         }
         /*VRAM DMA CGB*/
-        else if ((address >= 0xFF51 && address <= 0xFF55) && true) {
+        else if ((address >= 0xFF51 && address <= 0xFF55) && CGBmode) {
         }
         /*BG / OBJ Palettes CGB*/
-        else if ((address >= 0xFF68 && address <= 0xFF6B) && true) {
+        else if ((address >= 0xFF68 && address <= 0xFF6B) && CGBmode) {
         }
         /*WRAM Bank Select CGB*/
-        else if (address == 0xFF70 && true) {
+        else if (address == 0xFF70 && CGBmode) {
         }
     }
     /*High RAM (HRAM)*/
