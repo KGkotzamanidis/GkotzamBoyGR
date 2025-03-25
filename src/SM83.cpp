@@ -68,7 +68,7 @@ void SM83::reset(void) {
     IMEhold = false;
     ishalt = false;
 
-    PC = 0x0000;
+    PC = 0X0000;
     SP = 0x0000;
     A = B = C = D = E = H = L = F = 0x00;
 }

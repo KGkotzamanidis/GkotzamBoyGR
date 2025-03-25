@@ -19,41 +19,35 @@
 #include <SDL3_image/SDL_image.h>
 
 #include "Bios.h"
-#include "Motherboard.h"
 #include "Interrupts.h"
+#include "Motherboard.h"
 #include "SM83.h"
 #include "Timers.h"
 
 std::vector<uint32_t> framebuffer;
 
-void drawEmoji()
-{
-    for (int y = 30; y < 110; y++)
-    {
-        for (int x = 40; x < 120; x++)
-        {
+void drawEmoji() {
+    for (int y = 30; y < 110; y++) {
+        for (int x = 40; x < 120; x++) {
             int index = y * 160 + x;
 
             // Face color (yellow)
             framebuffer[index] = 0xFFFF00FF;
 
             // Eyes (black)
-            if ((x > 60 && x < 70 && y > 50 && y < 60) || (x > 90 && x < 100 && y > 50 && y < 60))
-            {
+            if ((x > 60 && x < 70 && y > 50 && y < 60) || (x > 90 && x < 100 && y > 50 && y < 60)) {
                 framebuffer[index] = 0x000000FF;
             }
 
             // Smile (black curve)
-            if (y > 80 && y < 90 && (x > 55 && x < 105))
-            {
+            if (y > 80 && y < 90 && (x > 55 && x < 105)) {
                 framebuffer[index] = 0x000000FF;
             }
         }
     }
 }
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
     Bios bios;
     Interrupts interrupts;
     Timers timers(interrupts);
@@ -70,8 +64,7 @@ int main(int argc, char *argv[])
     SDL_SetWindowIcon(windows, icon);
 
     SDL_Log("Debug:Available renderer drivers:");
-    for (int i = 0; i < SDL_GetNumRenderDrivers(); i++)
-    {
+    for (int i = 0; i < SDL_GetNumRenderDrivers(); i++) {
         SDL_Log("%d. %s", i + 1, SDL_GetRenderDriver(i));
     }
 
@@ -86,16 +79,12 @@ int main(int argc, char *argv[])
     timers.reset();
     cpu.reset();
 
-    while (!done)
-    {
-        while (SDL_PollEvent(&event))
-        {
-            if (event.type == SDL_EVENT_QUIT)
-            {
+    while (!done) {
+        while (SDL_PollEvent(&event)) {
+            if (event.type == SDL_EVENT_QUIT) {
                 done = true;
             }
-            if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN)
-            {
+            if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
                 emulating = true;
             }
         }

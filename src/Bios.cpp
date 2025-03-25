@@ -16,17 +16,14 @@
  *along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 #include "Bios.h"
-Bios::Bios()
-{
+Bios::Bios() {
     std::printf("Initiallize BIOS Sector\n");
 }
 
-void Bios::loadBios(std::string BiosPath)
-{
+void Bios::loadBios(std::string BiosPath) {
     std::ifstream ifs(BiosPath, std::ios::ate | std::ios::binary | std::ios::in);
     std::printf("Locate the BOOT Rom\n");
-    if (ifs.is_open())
-    {
+    if (ifs.is_open()) {
         std::printf("Reading...");
         ifs.seekg(0, std::ios::end);
         Biosize = ifs.tellg();
@@ -35,19 +32,17 @@ void Bios::loadBios(std::string BiosPath)
         ifs.read(reinterpret_cast<char *>(BIOS.data()), Biosize);
         ifs.close();
         BootROM = true;
-        std::printf("%i KiB OK\n",(int)Biosize);
-    }
-    else
-    {
+        std::printf("%i KiB OK\n", (int)Biosize);
+    } else {
         std::printf("Error while Reading BOOT Rom\n");
         BootROM = false;
     }
 }
 
-uint8_t Bios::receivingData(uint16_t address){
+uint8_t Bios::receivingData(uint16_t address) {
     return BIOS[address];
 }
 
-void Bios::sendingData(uint16_t address, uint8_t data){
+void Bios::sendingData(uint16_t address, uint8_t data) {
     BIOS[address] = data;
 }
