@@ -131,6 +131,9 @@ void PPU::syncPPU(int lastCycleCount) {
         }
         break;
     case 1: /*VBlank*/
+        if (PPUDotsCount >= 456) {
+            PPUDotsCount -= 456;
+        }
         break;
     case 2: /*OAM Scan*/
         if (PPUDotsCount >= 80) {
