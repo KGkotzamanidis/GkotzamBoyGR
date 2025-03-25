@@ -63,7 +63,7 @@ void Timers::reset(void) {
     DIV = TIMA = TMA = TAC = 0x00;
 }
 
-void Timers::updateTimers(int lastCycleCount) {
+void Timers::syncTimers(int lastCycleCount) {
     DIVCycleCount += lastCycleCount;
     if (DIVCycleCount >= 256) {
         DIVCycleCount -= 256;

@@ -32,7 +32,7 @@ public:
     void sendingData(uint16_t address, uint8_t data);
 
     void reset(void);
-    void updateTimers(int lastCycleCount);
+    void syncTimers(int lastCycleCount);
 
 private:
     Interrupts *interrupts = nullptr;
